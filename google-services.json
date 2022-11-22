@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "104339284493",
+    "project_id": "swingfinderproject",
+    "storage_bucket": "swingfinderproject.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:104339284493:android:a624d1d51d730308626b44",
+        "android_client_info": {
+          "package_name": "com.swingFinder"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "104339284493-89t869p8qigjn37rqh832ekka3am1r1j.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCpm1BvamQIxABeXZSXztuoSRIImRAQnlI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "104339284493-89t869p8qigjn37rqh832ekka3am1r1j.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

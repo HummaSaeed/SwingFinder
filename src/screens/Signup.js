@@ -10,7 +10,6 @@ import {auth} from '../config';
 import { useNavigation } from "@react-navigation/native";
 
 const Signup = ({navigation}) => {
- 
   const [username, setusername] = useState("");
   const [email, setemail] = useState("");
   const [password, setpassword] = useState("");
@@ -36,7 +35,7 @@ const Signup = ({navigation}) => {
         <GrayButton source={Apple} />
       </View>
       <View style={{ paddingTop: 20 }}>
-        <InputField value={username}  placeholder={"Alexandro"} label={"Name"} />
+        <InputField value={username} onChangeText={(username)=>setusername(username)} placeholder={"Alexandro"} label={"Name"} />
         <InputField
           value={email}
           onChangeText={(email)=>setemail(email)}

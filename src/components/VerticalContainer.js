@@ -1,15 +1,34 @@
-import React from "react";
-import { StyleSheet, View, Text, Image } from "react-native";
+import React,{useState} from "react";
+import { Video } from "expo-av";
+import { StyleSheet, View, Text, TouchableOpacity } from "react-native";
 import image from "../../assets/images/verticalimage.png";
 
-const VerticalContainer = () => {
+const VerticalContainer = ({item,selectedId, onPress }) => {
+  
+  const date = new Date(item.creationTime);
+  const creationDate = date.toLocaleDateString('sv');
+  const creationTime = date.toLocaleTimeString("sv")
   return (
     <View style={styles.container}>
       <View style={styles.textview}>
-        <Text style={styles.date}>May 23, 2022</Text>
+        <Text style={styles.date}>{creationDate}</Text>
         <Text style={styles.text}>Updated on 23</Text>
       </View>
-      <Image source={image} width="121" height="80" style={styles.image} />
+      <TouchableOpacity onPress={onPress}>
+          <Video
+            useNativeControls
+            isLooping
+            style={{
+              width: 121,
+              height: 80,
+              marginLeft:5
+            }}
+            source={{
+              uri: item.uri,
+            }}
+          />
+        </TouchableOpacity>
+      {/* <Image source={image} width="121" height="80" style={styles.image} /> */}
     </View>
   );
 };

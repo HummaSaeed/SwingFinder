@@ -3,10 +3,10 @@ import { View, Text, TouchableOpacity, StyleSheet,Image } from "react-native";
 
 import cheronRight from '../../assets/images/cheronRight.png'
 
-const AccountView = ({text,src}) => {
+const AccountView = ({text,src,onPress}) => {
   return (
     <View>
-      <TouchableOpacity style={styles.view}>
+      <TouchableOpacity style={styles.view} onPress={onPress}>
         <Image source={src} />
         <View
           style={{

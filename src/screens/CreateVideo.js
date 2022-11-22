@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
   Image,
   ScrollView,
-  SafeAreaView
+  SafeAreaView,
 } from "react-native";
 import { Camera, CameraType } from "expo-camera";
 import * as MediaLibrary from "expo-media-library";
@@ -22,6 +22,8 @@ import paint from "../../assets/images/paint.png";
 import back from "../../assets/images/undooutline.png";
 import forward from "../../assets/images/forward.png";
 import save from "../../assets/images/save.png";
+import CustomIcon from "react-native-vector-icons/FontAwesome";
+import EditVideo from "./EditVideo";
 
 export const CreateVideo = ({ navigation }) => {
   const [hasAudioPermission, setHasAudioPermission] = useState(null);
@@ -34,6 +36,10 @@ export const CreateVideo = ({ navigation }) => {
   const [startrecording, setstartrecording] = useState(false);
   const [showPreview, setshowPreview] = useState(false);
   const [url, seturl] = useState(null);
+  const [Paused, setPaused] = useState(false);
+  const handlePaused = () => {
+    setPaused(!Paused);
+  };
   useEffect(() => {
     (async () => {
       const cameraStatus = await Camera.requestCameraPermissionsAsync();
@@ -44,13 +50,15 @@ export const CreateVideo = ({ navigation }) => {
   }, []);
   const takeVideo = async () => {
     setstartrecording(true);
+    console.log("taking Video");
     if (camera) {
       const data = await camera.recordAsync();
       const { status } = await Permissions.askAsync(Permissions.MEDIA_LIBRARY);
       setRecord(data.uri);
+
       const asset = await MediaLibrary.createAssetAsync(data.uri);
       if (status) {
-        MediaLibrary.createAlbumAsync("Expo", asset)
+        MediaLibrary.createAlbumAsync("DCIM", asset)
           .then(() => {
             console.log("Album created!");
           })
@@ -58,10 +66,9 @@ export const CreateVideo = ({ navigation }) => {
             console.log("err", error);
           });
       }
-
       let url;
       if (status) {
-        const getphotos = await MediaLibrary.getAlbumAsync("Expo");
+        const getphotos = await MediaLibrary.getAlbumAsync("DCIM");
         var abc = await MediaLibrary.getAssetsAsync({
           album: getphotos,
           mediaType: [MediaLibrary.MediaType.video],
@@ -182,8 +189,8 @@ export const CreateVideo = ({ navigation }) => {
         </>
       ) : (
         <>
-          {url != undefined && url != null ? (
-            <SafeAreaView >
+          {record !== null || record !== undefined ? (
+            <>
               <View
                 style={{
                   display: "flex",
@@ -194,47 +201,90 @@ export const CreateVideo = ({ navigation }) => {
                   top: 10,
                   flexDirection: "row",
                   alignItems: "center",
-                  paddingTop:40,
+                  paddingTop: 40,
                   paddingLeft: 30,
                   paddingRight: 30,
                   justifyContent: "space-between",
-                  zIndex:1
                 }}
               >
                 <TouchableOpacity
-                style={{width:50,height:50}}
-                 onPress={()=>{navigation.navigate('Editors')}}
+                  style={{ width: 50, height: 50 }}
                 >
                   <Image source={paint} />
                 </TouchableOpacity>
-                <TouchableOpacity
-                style={{width:50,height:50}}
-                >
+                <TouchableOpacity style={{ width: 50, height: 50 }}>
                   <Image source={back} />
                 </TouchableOpacity>
-                <TouchableOpacity
-                style={{width:50,height:50}}
-                >
-                <Image source={forward} />
+                <TouchableOpacity style={{ width: 50, height: 50 }} >
+                  <Image source={forward} />
                 </TouchableOpacity>
-                <TouchableOpacity
-                style={{width:50,height:50}}
-                >
-                <Image source={save} />
+                <TouchableOpacity style={{ width: 50, height: 50 }}>
+                  <Image source={save} />
                 </TouchableOpacity>
               </View>
-              <Video
-                useNativeControls
-                resizeMode="contain"
-                isLooping
-                style={styles.videosave}
-                ref={video}
-                source={{
-                  uri: record,
+              
+              {record !== null && record !== undefined ? (
+                  <Video
+                  ref={video}
+                  style={styles.videosave}
+                  source={{
+                    uri:'https://d23dyxeqlo5psv.cloudfront.net/big_buck_bunny.mp4',
+                  }}
+                  resizeMode="contain"
+                  isLooping
+                  onPlaybackStatusUpdate={status => setStatus(() => status)}
+                />
+              ) : (
+                <Text>No Video Found</Text>
+              )}
+              <View
+                style={{
+                  display: "flex",
+                  height: 150,
+                  width: "100%",
+                  backgroundColor: "white",
+                  position: "absolute",
+                  bottom: 0,
+                  flexDirection: "row",
+                  alignItems: "center",
+                  paddingTop: 40,
+                  paddingLeft: 30,
+                  paddingRight: 30,
+                  justifyContent: "space-between",
                 }}
-                onPlaybackStatusUpdate={(status) => setStatus(() => status)}
-              />
-            </SafeAreaView>
+              >
+                <View
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                    flexDirection: "row",
+                    width: "100%",
+                  }}
+                >
+                  <TouchableOpacity
+                    onPress={() => {
+                      setshowPreview(false);
+                    }}
+                  >
+                    <Text style={{ color: "#FF7B1C" }}>Cancel</Text>
+                  </TouchableOpacity>
+                  {!Paused ? (
+                    <TouchableOpacity onPress={handlePaused}>
+                      <CustomIcon name="play" color="#FF7B1C" size={21} />
+                    </TouchableOpacity>
+                  ) : (
+                    <TouchableOpacity onPress={handlePaused}>
+                      <CustomIcon name="pause" color="#FF7B1C" size={21} />
+                    </TouchableOpacity>
+                  )}
+                  
+                  <TouchableOpacity onPress={()=>{navigation.navigate('EditVideos',{record:record})}}>
+                    <Text style={{ color: "#FF7B1C" }}>Next</Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+            </>
           ) : (
             <></>
           )}
@@ -310,8 +360,9 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   videosave: {
-    marginTop: 30,
-    height: "100%",
+    left: 0,
+    marginTop: "23%",
+    height: "80%",
     width: 400,
   },
 });

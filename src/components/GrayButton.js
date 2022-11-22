@@ -3,7 +3,7 @@ import {View, Text, StyleSheet, TouchableOpacity, Image} from 'react-native';
 
 const GrayButton = ({source}) => {
   return (
-    <TouchableOpacity style={styles.button}>
+    <TouchableOpacity style={styles.button} >
         <Image source={source}/>
     </TouchableOpacity>
   )
